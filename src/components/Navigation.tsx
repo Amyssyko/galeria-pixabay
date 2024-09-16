@@ -21,9 +21,10 @@ export const Navigation = ({
 			</p>
 			<nav className='flex justify-center gap-4'>
 				<button
+					aria-label='Página anterior'
 					type='button'
 					onClick={() => handleNavigation(TypeNavigation.PREV)}
-					className='flex items-center justify-center px-4 py-2 text-base font-medium text-blue-50 bg-white border border-blue-300 rounded-lg hover:bg-blue-100 hover:text-blue-700 dark:bg-blue-800 dark:border-blue-700 dark:text-blue-50 dark:hover:bg-blue-700 dark:hover:text-white space-x-2'>
+					className='flex items-center justify-center px-4 py-2 text-base font-medium bg-white border border-blue-300 rounded-lg hover:bg-blue-100 hover:text-blue-700 dark:bg-blue-800 dark:border-blue-700 dark:text-blue-50 dark:hover:bg-blue-700 dark:hover:text-white space-x-1'>
 					<svg
 						className='size-4'
 						aria-hidden='true'
@@ -41,9 +42,10 @@ export const Navigation = ({
 					<span>Atras</span>
 				</button>
 				<button
+					aria-label='Página siguiente'
 					type='button'
 					onClick={() => handleNavigation(TypeNavigation.NEXT)}
-					className='flex items-center justify-center px-4 py-2 text-base font-medium text-blue-50 bg-white border border-blue-300 rounded-lg hover:bg-blue-100 hover:text-blue-700 dark:bg-blue-800 dark:border-blue-700 dark:text-blue-50 dark:hover:bg-blue-700 dark:hover:text-white space-x-2'>
+					className='flex items-center justify-center px-4 py-2 text-base font-medium bg-white border border-blue-300 rounded-lg hover:bg-blue-100 hover:text-blue-700 dark:bg-blue-800 dark:border-blue-700 dark:text-blue-50 dark:hover:bg-blue-700 dark:hover:text-white space-x-1'>
 					<span>Siguiente</span>
 					<svg
 						className='size-4'
