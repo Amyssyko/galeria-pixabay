@@ -1,3 +1,3 @@
 export const Loading = () => {
-	return <div className="flex justify-center items-center"> Loading... </div>
+	return <div className='aspect-video'> Cargando... </div>
 }
