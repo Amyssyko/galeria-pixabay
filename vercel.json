@@ -5,7 +5,7 @@
         "headers": [
           {
             "key": "Content-Security-Policy",
-            "value": "default-src 'self'; script-src 'self' https://galeria-pixabay.vercel.app; style-src 'self' https://galeria-pixabay.vercel.app; img-src 'self' data: https://galeria-pixabay.vercel.app; connect-src 'self'; font-src 'self' https://galeria-pixabay.vercel.app; frame-src 'none';"
+            "value": "default-src 'self'; script-src 'self' https://galeria-pixabay.vercel.app; style-src 'self' https://galeria-pixabay.vercel.app; img-src 'self' data: https://galeria-pixabay.vercel.app; connect-src 'self' https://pixabay.com; font-src 'self' https://galeria-pixabay.vercel.app; frame-src 'none';"
           }
         ]
       }
