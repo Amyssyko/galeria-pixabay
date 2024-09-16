@@ -1,7 +1,7 @@
 const Footer = () => {
 	return (
 		<footer className='grid justify-items-center place-content-center pt-4 pb-1'>
-			<h6>
+			<h3>
 				Desarrollado por{' '}
 				<a
 					href='http://github.com/Amyssyko'
@@ -11,7 +11,7 @@ const Footer = () => {
 					title='Visita el perfil de GitHub de Amysyko'>
 					Amysyko
 				</a>
-			</h6>
+			</h3>
 			<p>&copy; {new Date().getFullYear()} - Todos los derechos reservados</p>
 			<figure>
 				<a

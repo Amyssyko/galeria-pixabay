@@ -34,8 +34,10 @@ export const CardVideos = ({
 			a.href = urlBlob
 			a.download = filename
 			a.click()
-		} catch (error) {
-			console.error('Error downloading video:', error)
+		} catch (error: unknown) {
+			if (error instanceof Error) {
+				throw new Error(error.message)
+			}
 		}
 	}
 
@@ -66,14 +68,14 @@ export const CardVideos = ({
 								href={pageURL}
 								target='_blank'
 								rel='noreferrer'
-								className='underline hover:no-underline hover:text-sky-200'
+								className='hover:underline hover:text-sky-200'
 								aria-label='Ver vistas'>
 								{views}
 							</a>
 						</div>
 						<div className='flex flex-col justify-center items-center'>
 							<span className='font-semibold'>Descargas</span>
-							<small className='underline hover:no-underline hover:text-sky-200'>
+							<small className='hover:underline hover:text-sky-200'>
 								{downloads}
 							</small>
 						</div>
@@ -84,7 +86,7 @@ export const CardVideos = ({
 						<div className='flex flex-wrap justify-center gap-2'>
 							{tags.split(', ').map((tag, index) => (
 								<button
-									className='underline hover:no-underline hover:text-sky-200 text-sm'
+									className='hover:underline hover:text-sky-200 text-sm'
 									type='button'
 									onClick={() => handleCategory(tag)}
 									key={index}

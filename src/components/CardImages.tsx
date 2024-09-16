@@ -35,8 +35,10 @@ export const CardImages = ({
 			a.href = urlBlob
 			a.download = filename
 			a.click()
-		} catch (error) {
-			console.error('Error downloading image:', error)
+		} catch (error: unknown) {
+			if (error instanceof Error) {
+				throw new Error(error.message)
+			}
 		}
 	}
 	const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -49,7 +51,7 @@ export const CardImages = ({
 	return (
 		<section
 			key={id}
-			className='bg-blue-700/5 border w-full rounded'>
+			className='bg-blue-700/20 border w-full rounded text-sky-100'>
 			<figure>
 				<div
 					className='aspect-video overflow-hidden'
@@ -78,14 +80,14 @@ export const CardImages = ({
 								href={pageURL}
 								target='_blank'
 								rel='noreferrer'
-								className='underline hover:no-underline hover:text-sky-200'
+								className='hover:underline hover:text-sky-200'
 								aria-label='Ver vistas'>
 								{views}
 							</a>
 						</div>
 						<div className='flex flex-col justify-center items-center'>
 							<span className='font-semibold'>Descargas</span>
-							<small className='underline hover:no-underline hover:text-sky-200'>
+							<small className='hover:underline hover:text-sky-200'>
 								{downloads}
 							</small>
 						</div>
@@ -96,7 +98,7 @@ export const CardImages = ({
 						<div className='flex flex-wrap justify-center gap-2 pt-4'>
 							{tags.split(', ').map((tag, index) => (
 								<button
-									className='underline hover:no-underline hover:text-sky-200 text-sm'
+									className='hover:underline hover:text-sky-200 text-sm'
 									type='button'
 									onClick={() => handleCategory(tag)}
 									key={index}

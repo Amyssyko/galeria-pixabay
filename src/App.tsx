@@ -32,8 +32,11 @@ function App() {
 		(localStorage.getItem('type') as TypeSearch) || TypeSearch.PHOTO
 	)
 
+	const [loading, setLoading] = useState(false)
+
 	useEffect(() => {
 		const fetchData = async () => {
+			setLoading(true)
 			const typeMedia = type === TypeSearch.PHOTO ? URL_PHOTO : URL_VIDEO
 
 			const newCategory = category
@@ -52,7 +55,6 @@ function App() {
 
 				if (response.ok === false) {
 					setError(true)
-					console.error('Error fetching data:', result.message)
 					throw new Error(result.message)
 				}
 				if (type === TypeSearch.PHOTO) {
@@ -65,11 +67,11 @@ function App() {
 			} catch (e: unknown) {
 				if (e instanceof Error) {
 					setError(true)
-					console.error('Error fetching data:', e.message)
 					throw new Error(e.message)
 				}
 			} finally {
 				setError(false)
+				setLoading(false)
 			}
 		}
 
@@ -195,6 +197,7 @@ function App() {
 						<label>
 							Por página
 							<select
+								name='perPage'
 								className='ml-2 border border-gray-400 placeholder:text-center rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 capitalize'
 								value={perPage}
 								onChange={(e) => handlePerPage(Number(e.target.value))}
@@ -213,70 +216,89 @@ function App() {
 				</div>
 			</header>
 
-			<main>
+			<main className='py-2'>
 				{error && (
 					<div className='w-full grid justify-items-center place-content-center items-center justify-center h-dvh'>
 						<p className='text-red-600'>Error al cargar la información</p>
 					</div>
 				)}
 
-				<div className='flex flex-wrap mt-2 gap-4 mx-auto justify-center'>
-					{!error &&
-						((type === TypeSearch.PHOTO && dataPhotos.length === 0) ||
-							(type === TypeSearch.VIDEO && dataVideos.length === 0)) && (
-							<p className='text-center'>
-								No hay resultados de{' '}
-								{type === TypeSearch.PHOTO ? 'imágenes' : 'videos'}
-							</p>
-						)}
+				<section className='grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6 gap-4'>
+					{loading &&
+						Array.from({ length: 12 }, (_, i) => (
+							<Suspense
+								key={i}
+								fallback={<Loading />}>
+								<CardImages
+									id={i}
+									largeImageURL='https://via.placeholder.com/500'
+									tags='Loading...'
+									views={0}
+									downloads={0}
+									pageURL='https://via.placeholder.com/500'
+									handleCategory={handleCategory}
+								/>
+							</Suspense>
+						))}
+				</section>
 
-					<section className='grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6 gap-4'>
-						{type === TypeSearch.PHOTO
-							? dataPhotos.map(
-									({ id, largeImageURL, tags, views, downloads, pageURL }) => (
-										<Suspense
-											key={id}
-											fallback={<Loading />}>
-											<CardImages
-												id={id}
-												largeImageURL={largeImageURL}
-												tags={tags}
-												views={views}
-												downloads={downloads}
-												pageURL={pageURL}
-												handleCategory={handleCategory}
-											/>
-										</Suspense>
-									)
-							  )
-							: dataVideos.map(
-									({ id, videos, tags, views, downloads, pageURL }) => (
-										<Suspense
-											key={id}
-											fallback={<Loading />}>
-											<CardVideos
-												id={id}
-												videos={videos}
-												tags={tags}
-												views={views}
-												downloads={downloads}
-												pageURL={pageURL}
-												handleCategory={handleCategory}
-											/>
-										</Suspense>
-									)
-							  )}
+				{((type === TypeSearch.PHOTO && dataPhotos.length === 0) ||
+					(type === TypeSearch.VIDEO && dataVideos.length === 0)) && (
+					<section className='grid justify-items-center place-content-center items-center justify-center h-dvh'>
+						<p className='text-center'>
+							No hay resultados de{' '}
+							{type === TypeSearch.PHOTO ? 'imágenes' : 'videos'}
+						</p>
 					</section>
-				</div>
+				)}
 
-				{!error && (dataPhotos.length > 0 || dataVideos.length > 0) && (
+				<section className='grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6 gap-4'>
+					{!loading && type === TypeSearch.PHOTO
+						? dataPhotos.map(
+								({ id, largeImageURL, tags, views, downloads, pageURL }) => (
+									<Suspense
+										key={id}
+										fallback={<Loading />}>
+										<CardImages
+											id={id}
+											largeImageURL={largeImageURL}
+											tags={tags}
+											views={views}
+											downloads={downloads}
+											pageURL={pageURL}
+											handleCategory={handleCategory}
+										/>
+									</Suspense>
+								)
+						  )
+						: dataVideos.map(
+								({ id, videos, tags, views, downloads, pageURL }) => (
+									<Suspense
+										key={id}
+										fallback={<Loading />}>
+										<CardVideos
+											id={id}
+											videos={videos}
+											tags={tags}
+											views={views}
+											downloads={downloads}
+											pageURL={pageURL}
+											handleCategory={handleCategory}
+										/>
+									</Suspense>
+								)
+						  )}
+				</section>
+
+				{!loading && (dataPhotos.length > 0 || dataVideos.length > 0) ? (
 					<Navigation
 						PageNumber={page}
 						handleNavigation={HandleNavigation}
 					/>
+				) : (
+					<Loading />
 				)}
 			</main>
-
 			<Footer />
 		</div>
 	)
