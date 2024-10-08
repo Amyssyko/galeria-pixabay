@@ -5,7 +5,6 @@ import Footer from './components/Footer'
 import { Loading } from './components/Loading'
 import { Navigation } from './components/Navigation'
 import {
-	PerPageEnum,
 	TypeNavigation,
 	TypeSearch,
 	TypeSort,
@@ -22,7 +21,7 @@ function App() {
 	const [error, setError] = useState(false)
 	const [page, setPage] = useState<number>(1)
 	const [perPage, setPerPage] = useState<number>(
-		Number(localStorage.getItem('perPage') as PerPageEnum) || 12
+		Number(localStorage.getItem('perPage')) || 12
 	)
 	const [category, setCategory] = useState<string | undefined>(undefined)
 	const [sort, setSort] = useState<TypeSort>(
@@ -85,13 +84,31 @@ function App() {
 	useEffect(() => {
 		const handleStorageChange = (event: StorageEvent) => {
 			if (event.key === 'sort') {
-				setSort(event.newValue as TypeSort)
+				const newValue = event.newValue as TypeSort
+				setSort((prev) => {
+					if (prev === newValue) {
+						return prev
+					}
+					return newValue
+				})
 			}
 			if (event.key === 'type') {
-				setType(event.newValue as TypeSearch)
+				const newValue = event.newValue as TypeSearch
+				setType((prev) => {
+					if (prev === newValue) {
+						return prev
+					}
+					return newValue
+				})
 			}
 			if (event.key === 'perPage') {
-				setPerPage(Number(event.newValue as PerPageEnum))
+				const newValue = event.newValue as string
+				setPerPage((prev) => {
+					if (prev === Number(newValue)) {
+						return prev
+					}
+					return Number(newValue)
+				})
 			}
 		}
 

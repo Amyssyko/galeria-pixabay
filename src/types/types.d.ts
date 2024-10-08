@@ -30,32 +30,20 @@ export interface HitPhotos {
 }
 
 export enum TypeImage {
-	Photo = "photo",
+	Photo = 'photo'
 }
 export enum TypeSearch {
-	PHOTO = "Fotos",
-	VIDEO = "Videos",
+	PHOTO = 'Fotos',
+	VIDEO = 'Videos'
 }
 export enum TypeNavigation {
-	NONE = "none",
-	PREV = "prev",
-	NEXT = "next",
+	NONE = 'none',
+	PREV = 'prev',
+	NEXT = 'next'
 }
 export enum TypeSort {
-	POPULAR = "popular",
-	LATEST = "latest",
-}
-export enum PerPageEnum {
-	12 = '12',
-	24 = '24',
-	36 = '36',
-	48 = '48',
-	60 = '60',
-	72 = '72',
-	84 = '84',
-	96 = '96',
-	108 = '108',
-	120 = '120',
+	POPULAR = 'popular',
+	LATEST = 'latest'
 }
 
 export interface PixabayVideos {
@@ -82,7 +70,7 @@ export interface HitVideos {
 }
 
 export enum TypeVideo {
-	Film = "film",
+	Film = 'film'
 }
 
 export interface Videos {
