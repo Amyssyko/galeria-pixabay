@@ -45,6 +45,18 @@ export enum TypeSort {
 	POPULAR = "popular",
 	LATEST = "latest",
 }
+export enum PerPageEnum {
+	12 = '12',
+	24 = '24',
+	36 = '36',
+	48 = '48',
+	60 = '60',
+	72 = '72',
+	84 = '84',
+	96 = '96',
+	108 = '108',
+	120 = '120',
+}
 
 export interface PixabayVideos {
 	total: number
@@ -84,5 +96,7 @@ export interface Large {
 	url: string
 	width: number
 	height: number
+	size: number
+	thumnail: string
 	size: number
 }

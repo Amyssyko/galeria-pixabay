@@ -5,6 +5,7 @@ import Footer from './components/Footer'
 import { Loading } from './components/Loading'
 import { Navigation } from './components/Navigation'
 import {
+	PerPageEnum,
 	TypeNavigation,
 	TypeSearch,
 	TypeSort,
@@ -20,7 +21,9 @@ const PER_PAGES = [12, 24, 36, 48, 60, 72, 84, 96, 108, 120] as const
 function App() {
 	const [error, setError] = useState(false)
 	const [page, setPage] = useState<number>(1)
-	const [perPage, setPerPage] = useState<number>(12)
+	const [perPage, setPerPage] = useState<number>(
+		Number(localStorage.getItem('perPage') as PerPageEnum) || 12
+	)
 	const [category, setCategory] = useState<string | undefined>(undefined)
 	const [sort, setSort] = useState<TypeSort>(
 		(localStorage.getItem('sort') as TypeSort) || TypeSort.POPULAR
@@ -44,7 +47,6 @@ function App() {
 				: ''
 
 			const query = `&image_type=photo&lang=es&order=${sort}&per_page=${perPage}&page=${page}&lang=es${newCategory}`
-
 			try {
 				const url = `${typeMedia}/?key=${API}&q=${encodeURIComponent(
 					search
@@ -78,13 +80,18 @@ function App() {
 		fetchData()
 	}, [search, type, page, sort, category, perPage])
 
+	console.log('perPage', localStorage.getItem('perPage'))
 	// Listen for changes in localStorage
 	useEffect(() => {
 		const handleStorageChange = (event: StorageEvent) => {
 			if (event.key === 'sort') {
 				setSort(event.newValue as TypeSort)
-			} else if (event.key === 'type') {
+			}
+			if (event.key === 'type') {
 				setType(event.newValue as TypeSearch)
+			}
+			if (event.key === 'perPage') {
+				setPerPage(Number(event.newValue as PerPageEnum))
 			}
 		}
 
@@ -101,6 +108,7 @@ function App() {
 			if (prevState === perPage) {
 				return perPage
 			}
+			localStorage.setItem('perPage', perPage.toString())
 			return perPage
 		})
 	}
@@ -199,7 +207,7 @@ function App() {
 							<select
 								name='perPage'
 								className='ml-2 border border-gray-400 placeholder:text-center rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 capitalize'
-								value={perPage}
+								defaultValue={perPage}
 								onChange={(e) => handlePerPage(Number(e.target.value))}
 								aria-label='Seleccionar resultados por página'>
 								{PER_PAGES.map((per) => (
@@ -231,11 +239,11 @@ function App() {
 								fallback={<Loading />}>
 								<CardImages
 									id={i}
-									largeImageURL='https://via.placeholder.com/500'
+									largeImageURL='https://via.placeholder.com/250'
 									tags='Loading...'
 									views={0}
 									downloads={0}
-									pageURL='https://via.placeholder.com/500'
+									pageURL='https://via.placeholder.com/250'
 									handleCategory={handleCategory}
 								/>
 							</Suspense>
@@ -254,40 +262,26 @@ function App() {
 
 				<section className='grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6 gap-4'>
 					{!loading && type === TypeSearch.PHOTO
-						? dataPhotos.map(
-								({ id, largeImageURL, tags, views, downloads, pageURL }) => (
-									<Suspense
-										key={id}
-										fallback={<Loading />}>
-										<CardImages
-											id={id}
-											largeImageURL={largeImageURL}
-											tags={tags}
-											views={views}
-											downloads={downloads}
-											pageURL={pageURL}
-											handleCategory={handleCategory}
-										/>
-									</Suspense>
-								)
-						  )
-						: dataVideos.map(
-								({ id, videos, tags, views, downloads, pageURL }) => (
-									<Suspense
-										key={id}
-										fallback={<Loading />}>
-										<CardVideos
-											id={id}
-											videos={videos}
-											tags={tags}
-											views={views}
-											downloads={downloads}
-											pageURL={pageURL}
-											handleCategory={handleCategory}
-										/>
-									</Suspense>
-								)
-						  )}
+						? dataPhotos.map((image) => (
+								<Suspense
+									key={image.id}
+									fallback={<Loading />}>
+									<CardImages
+										{...image}
+										handleCategory={handleCategory}
+									/>
+								</Suspense>
+						  ))
+						: dataVideos.map((video) => (
+								<Suspense
+									key={video.id}
+									fallback={<Loading />}>
+									<CardVideos
+										{...video}
+										handleCategory={handleCategory}
+									/>
+								</Suspense>
+						  ))}
 				</section>
 
 				{!loading && (dataPhotos.length > 0 || dataVideos.length > 0) ? (

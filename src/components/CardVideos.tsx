@@ -1,14 +1,12 @@
 'use client'
 
+import { Videos } from '../types/types'
+
 interface Props {
 	handleCategory: (category: string) => void
 	downloads: number
 	views: number
-	videos: {
-		large: {
-			url: string
-		}
-	}
+	videos: Videos
 	tags: string
 	id: number
 	pageURL: string
@@ -23,9 +21,13 @@ export const CardVideos = ({
 	pageURL,
 	handleCategory
 }: Props) => {
-	const downloadHandler = async (url: string, id: number) => {
+	const downloadHandler = async (
+		url: string,
+		id: number,
+		resolution: number
+	) => {
 		const extension = url.split('.').pop()
-		const filename = `${id}.${extension}`
+		const filename = `${id}-${resolution}p.${extension}`
 		try {
 			const response = await fetch(url)
 			const blob = await response.blob()
@@ -44,20 +46,20 @@ export const CardVideos = ({
 	return (
 		<article
 			key={id}
-			className='bg-blue-700/5 border w-full rounded'>
+			className='dark:bg-blue-700/10 bg-slate-100 border w-full rounded'>
 			<figure>
-				<div className='aspect-video'>
+				<div className='md:aspect-video'>
 					<video
-						className='object-contain aspect-video rounded-sm'
-						src={videos.large.url}
+						className='object-contain md:aspect-video rounded-lg '
 						controls
-						onPlay={(e) => e.currentTarget.play()}
-						onPause={(e) => e.currentTarget.pause()}
-						onVolumeChange={(e) => {
-							const { volume } = e.currentTarget
-							e.currentTarget.muted = volume === 0
-						}}
-						aria-label='Video player'></video>
+						aria-label={`Video ${id}`}
+						poster={videos.large.thumnail}>
+						<source
+							src={videos.large.url}
+							type='video/mp4'
+						/>
+						Su navegador no soporta el elemento <code>video</code>.
+					</video>
 				</div>
 
 				<figcaption className='mx-2'>
@@ -81,7 +83,7 @@ export const CardVideos = ({
 						</div>
 					</div>
 
-					<div className='grid place-content-center justify-items-center mt-4'>
+					<div className='grid place-content-center justify-items-center mt-2'>
 						<span className='font-semibold'>Tags</span>
 						<div className='flex flex-wrap justify-center gap-2'>
 							{tags.split(', ').map((tag, index) => (
@@ -97,13 +99,46 @@ export const CardVideos = ({
 						</div>
 					</div>
 
-					<div className='flex justify-center items-center mt-4 pb-4'>
+					<div className='grid grid-cols-2 gap-4 justify-center  items-center mt-4 pb-2'>
 						<button
 							type='button'
-							onClick={() => downloadHandler(videos.large.url, id)}
-							className='bg-blue-600 text-white hover:text-white/70 hover:bg-blue-800 rounded-lg p-1 px-2'
+							onClick={() =>
+								downloadHandler(videos.large.url, id, videos.large.height)
+							}
+							className='bg-blue-600 text-white hover:text-white/70 hover:bg-blue-800 rounded-lg text-sm grid'
 							aria-label='Descargar video'>
-							Descargar
+							<span>Descargar</span>
+							<span>{videos.large.height}p</span>
+						</button>
+						<button
+							type='button'
+							onClick={() =>
+								downloadHandler(videos.medium.url, id, videos.medium.height)
+							}
+							className='bg-blue-600 text-white hover:text-white/70 hover:bg-blue-800 rounded-lg text-sm grid'
+							aria-label='Descargar video'>
+							<span>Descargar </span>
+							<span>{videos.medium.height}p</span>
+						</button>
+						<button
+							type='button'
+							onClick={() =>
+								downloadHandler(videos.small.url, id, videos.small.height)
+							}
+							className='bg-blue-600 text-white hover:text-white/70 hover:bg-blue-800 rounded-lg text-sm grid'
+							aria-label='Descargar video'>
+							<span>Descargar </span>
+							<span>{videos.small.height}p</span>
+						</button>
+						<button
+							type='button'
+							onClick={() =>
+								downloadHandler(videos.tiny.url, id, videos.tiny.height)
+							}
+							className='bg-blue-600 text-white hover:text-white/70 hover:bg-blue-800 rounded-lg  text-sm grid'
+							aria-label='Descargar video'>
+							<span>Descargar </span>
+							<span>{videos.tiny.height}p</span>
 						</button>
 					</div>
 				</figcaption>

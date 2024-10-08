@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import React, { useState } from 'react'
 
 interface Props {
 	largeImageURL: string
@@ -48,13 +48,15 @@ export const CardImages = ({
 
 		setMousePosition({ x, y })
 	}
+	//scroll navigation with intersection observer
+
 	return (
 		<section
 			key={id}
-			className='bg-blue-700/20 border w-full rounded text-sky-100'>
+			className='dark:bg-blue-700/10 bg-slate-100 border w-full rounded'>
 			<figure>
 				<div
-					className='aspect-video overflow-hidden'
+					className='aspect-video overflow-hidden flex justify-center items-center'
 					onMouseMove={handleMouseMove}
 					onMouseEnter={() => setIsHovered(true)}
 					onMouseLeave={() => setIsHovered(false)}>
@@ -65,6 +67,7 @@ export const CardImages = ({
 						src={largeImageURL}
 						alt={`Imagen con tags: ${tags}`}
 						onBlur={() => setIsHovered(false)}
+						srcSet={largeImageURL}
 						aria-label={`Imagen relacionada con ${tags}`}
 						style={{
 							transformOrigin: `${mousePosition.x}% ${mousePosition.y}%`
@@ -80,25 +83,23 @@ export const CardImages = ({
 								href={pageURL}
 								target='_blank'
 								rel='noreferrer'
-								className='hover:underline hover:text-sky-200'
+								className='hover:underline'
 								aria-label='Ver vistas'>
 								{views}
 							</a>
 						</div>
 						<div className='flex flex-col justify-center items-center'>
 							<span className='font-semibold'>Descargas</span>
-							<small className='hover:underline hover:text-sky-200'>
-								{downloads}
-							</small>
+							<small className='hover:underline'>{downloads}</small>
 						</div>
 					</div>
 
 					<div className='grid place-content-center justify-items-center mt-4'>
 						<span className='font-semibold'>Tags</span>
-						<div className='flex flex-wrap justify-center gap-2 pt-4'>
+						<div className='flex flex-wrap justify-center gap-2 pt-2'>
 							{tags.split(', ').map((tag, index) => (
 								<button
-									className='hover:underline hover:text-sky-200 text-sm'
+									className='hover:underline text-sm'
 									type='button'
 									onClick={() => handleCategory(tag)}
 									key={index}
@@ -109,7 +110,7 @@ export const CardImages = ({
 						</div>
 					</div>
 
-					<div className='flex justify-center items-center mt-4 pb-4'>
+					<div className='flex justify-center items-center mt-4 pb-2'>
 						<button
 							type='button'
 							onClick={() => downloadHandler(largeImageURL, id)}
